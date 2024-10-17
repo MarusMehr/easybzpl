@@ -1,0 +1,29 @@
+import streamlit as st
+import pandas as pd
+
+st.title("Excel-Datei-Anzeige und Diagnose")
+
+# Datei-Upload-Bereich
+uploaded_file = st.file_uploader("Lade eine Excel-Datei hoch", type="xlsx")
+
+if uploaded_file is not None:
+    try:
+        # Excel-Datei laden und Blattnamen anzeigen
+        xls = pd.ExcelFile(uploaded_file)
+        sheet_name = st.selectbox("Wähle das Blatt aus", xls.sheet_names)
+        
+        # Lade das ausgewählte Blatt ohne Header
+        df = pd.read_excel(xls, sheet_name=sheet_name, header=None)
+        
+        st.write("Vorschau der ersten 20 Zeilen in der Datei:")
+        st.write(df.head(20))  # Zeigt die ersten 20 Zeilen an
+        
+        st.write("Anzahl der Zeilen und Spalten in der Datei:")
+        st.write(f"Zeilen: {df.shape[0]}, Spalten: {df.shape[1]}")
+        
+        st.write("Falls die relevanten Spalten in einer bestimmten Zeile stehen, notieren Sie sich die Zeilennummer und teilen Sie mir diese mit.")
+        
+    except Exception as e:
+        st.error(f"Es ist ein Fehler aufgetreten: {e}")
+else:
+    st.write("Bitte lade eine Excel-Datei hoch, um die Vorschau zu sehen.")
